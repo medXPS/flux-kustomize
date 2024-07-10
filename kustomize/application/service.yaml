@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: example-service
-  namespace: example
+  namespace: flux-kustomize
   labels:
     app: example-app
 spec:

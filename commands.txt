@@ -1,0 +1,16 @@
+kubectl create secret generic github-secret  --from-literal=username=medXPS  --from-literal=password=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 -n flux-system
+
+
+kubectl create secret generic flux-system  --namespace=flux-system  --from-literal=GITHUB_TOKEN=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
+
+
+export GITHUB_TOKEN=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
+export GITHUB_USER=medXPS
+
+flux bootstrap github \
+ --owner=$GITHUB_USER \
+ --token-auth=$GITHUB_TOKEN \
+ --repository=flux-kustomize \
+ --branch=main \
+ --path=./kustomize \
+ --personal
