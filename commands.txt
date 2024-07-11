@@ -9,10 +9,10 @@ export GITHUB_USER=medXPS
 
 flux bootstrap github \
  --owner=$GITHUB_USER \
- --token-auth=$GITHUB_TOKEN \
+ --token-auth \
  --repository=flux-kustomize \
  --branch=main \
- --path=./kustomize \
+ --path=./k8s/gateway-service/overlays/dev \
  --personal
 
  ---------------

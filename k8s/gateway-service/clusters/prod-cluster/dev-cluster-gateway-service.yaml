@@ -1,0 +1,23 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: dev-cluster-gateway-service-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/medXPS/flux-kustomize
+  ref:
+    branch: main
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: dev-cluster-gateway-service
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./k8s/gateway-service/overlays/prod
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: dev-cluster-gateway-service-repo
