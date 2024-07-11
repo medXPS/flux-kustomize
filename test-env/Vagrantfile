@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "ubuntu/bionic64"
+  
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "8192"
+      vb.cpus = 6
+    end
+  
+    config.vm.network "forwarded_port", guest: 8080, host: 8080
+    config.vm.network "forwarded_port", guest: 50000, host: 50000
+  
+    config.vm.provision "shell", inline: <<-SHELL
+      # Update and install required packages
+      sudo apt-get update
+      sudo apt-get upgrade -y
+  
+      # Install Docker
+      sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      sudo apt-get update
+      sudo apt-get install -y docker-ce
+  
+      # Add vagrant user to the docker group
+      sudo usermod -aG docker vagrant
+  
+      # Install Jenkins
+      wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+      sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+      sudo apt-get update
+      sudo apt-get install -y openjdk-11-jdk jenkins
+  
+      # Start Jenkins and enable it to start at boot
+      sudo systemctl start jenkins
+      sudo systemctl enable jenkins
+  
+      # Allow Jenkins to use Docker
+      sudo usermod -aG docker jenkins
+      sudo systemctl restart jenkins
+  
+      # Install Docker Compose
+      sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      sudo chmod +x /usr/local/bin/docker-compose
+  
+      # Reboot to apply all changes
+      sudo reboot
+    SHELL
+  end
+  
