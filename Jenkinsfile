@@ -5,7 +5,7 @@ pipeline {
         registryName = 'sk09devops/flux-kustomize' // Provided Docker Hub repository name
         registryCredential = 'DOCKERHUB' // Provided credential name
         dockerImage = ''
-        imageTag = "1.0.0.-${BUILD_NUMBER}" // Default tag with build number
+        imageTag = "latest-${BUILD_NUMBER}" // Default tag with build number
         gitRepoURL = 'https://github.com/medXPS/flux-kustomize.git' // Code Repository
         gitRepoDir = 'gateway-service' // Provided directory name of your base code 
         dockerfilePath = 'microservices/gateway-service/src/Dockerfile' // Dockerfile path
@@ -32,7 +32,7 @@ pipeline {
                 script {
                     dir(gitRepoDir) {
                         
-                        imageTag = "1.0.0.-${BUILD_NUMBER}"
+                        imageTag = "latest-${BUILD_NUMBER}"
                         dockerImage = docker.build(registryName, "-f ${dockerfilePath} . --tag ${imageTag}")
                     }
                 }
@@ -62,7 +62,7 @@ pipeline {
 
                     def newImageLine = "image: ${registryName}:${imageTag}"
 
-                    sh "sed -i 's|image: sk09devops/flux-kustomize:1.0.0..*|${newImageLine}|' ${manifestsDir}"
+                    sh "sed -i 's|image: sk09devops/flux-kustomize:latest.*|${newImageLine}|' ${manifestsDir}"
 
                     withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         dir(cloneDir) {
