@@ -32,7 +32,7 @@ pipeline {
                 script {
                     dir(gitRepoDir) {
                         
-                        imageTag = "latest-${BUILD_NUMBER}"
+                        imageTag = "1.0.0.-${BUILD_NUMBER}"
                         dockerImage = docker.build(registryName, "-f ${dockerfilePath} . --tag ${imageTag}")
                     }
                 }
