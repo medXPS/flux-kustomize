@@ -2,13 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: default
-  name: example-app-2
+  name: gateway-service-svc
   labels:
-    app: example-app-2
+    app: gateway-service
 spec:
   type: ClusterIP
   selector:
-    app: example-app-2
+    app: gateway-service
   ports:
     - protocol: TCP
       name: http

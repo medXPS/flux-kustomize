@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-app-2
+  name: gateway-service
   labels:
-    app: example-app-2
+    app: gateway-service
   namespace: default
 spec:
   selector:
     matchLabels:
-      app: example-app-2
+      app: gateway-service
   replicas: 2
   strategy:
     type: RollingUpdate
@@ -18,11 +18,11 @@ spec:
   template:
     metadata:
       labels:
-        app: example-app-2
+        app: gateway-service
     spec:
       containers:
-      - name: example-app-2
-        image: docker.io/aimvector/example-app-2:0.0.2 # {"$imagepolicy": "default:example-app-2"}
+      - name: gateway-service
+        image: sk09devops/flux-kustomize:latest-4 # {"$imagepolicy": "default:example-app-2"}
         ports:
         - containerPort: 5000
         volumeMounts:
@@ -31,4 +31,4 @@ spec:
       volumes:
       - name: config-volume
         configMap:
-          name: example-app-2
+          name: gateway-service-cm
