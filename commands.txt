@@ -14,7 +14,7 @@ flux bootstrap github \
  --branch=main \
  --path=./k8s/gateway-service/overlays/dev \
  --personal
-
+./k8s/gateway-service/clusters/dev-cluster
  ---------------
  flux bootstrap  for Bitbucket : 
 
