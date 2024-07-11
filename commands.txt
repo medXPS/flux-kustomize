@@ -14,3 +14,122 @@ flux bootstrap github \
  --branch=main \
  --path=./kustomize \
  --personal
+
+ ---------------
+ flux bootstrap  for Bitbucket : 
+
+ flux bootstrap bitbucket-server \
+  --token-auth \
+  --hostname=my-bitbucket-server.com \
+  --owner=my-bitbucket-username \
+  --repository=my-repository \
+  --branch=main \
+  --path=clusters/my-cluster \
+  --personal
+
+  ---------------------
+  overlays and clusters 
+
+Service1
+|
+├── base
+├── overlays
+│   ├── dev 
+│   ├── staging 
+│   └── prod 
+└── clusters
+    ├── dev-cluster
+    ├── staging-cluster  
+    └── prod-cluster
+    
+Service2
+|
+├── base
+├── overlays
+│   ├── dev 
+│   ├── staging 
+│   └── prod 
+└── clusters
+    ├── dev-cluster
+    ├── staging-cluster  
+    └── prod-cluster
+        
+
+
+------------------------------------
+
+├── service-a
+│   ├── base
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   │   └── kustomization.yaml
+│   ├── overlays
+│   │   ├── dev
+│   │   │   ├── kustomization.yaml
+│   │   │   └── patch.yaml
+│   │   ├── staging
+│   │   │   ├── kustomization.yaml
+│   │   │   └── patch.yaml
+│   │   └── prod
+│   │       ├── kustomization.yaml
+│   │       └── patch.yaml
+│   └── clusters
+│       ├── dev-cluster
+│       │   ├── kustomization.yaml
+│       │   └── some-resource.yaml
+│       ├── staging-cluster
+│       │   ├── kustomization.yaml
+│       │   └── some-resource.yaml
+│       └── prod-cluster
+│           ├── kustomization.yaml
+│           └── some-resource.yaml
+├── service-b
+│   ├── base
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   │   └── kustomization.yaml
+│   ├── overlays
+│   │   ├── dev
+│   │   │   ├── kustomization.yaml
+│   │   │   └── patch.yaml
+│   │   ├── staging
+│   │   │   ├── kustomization.yaml
+│   │   │   └── patch.yaml
+│   │   └── prod
+│   │       ├── kustomization.yaml
+│   │       └── patch.yaml
+│   └── clusters
+│       ├── dev-cluster
+│       │   ├── kustomization.yaml
+│       │   └── some-resource.yaml
+│       ├── staging-cluster
+│       │   ├── kustomization.yaml
+│       │   └── some-resource.yaml
+│       └── prod-cluster
+│           ├── kustomization.yaml
+│           └── some-resource.yaml
+└── service-c
+    ├── base
+    │   ├── deployment.yaml
+    │   ├── service.yaml
+    │   └── kustomization.yaml
+    ├── overlays
+    │   ├── dev
+    │   │   ├── kustomization.yaml
+    │   │   └── patch.yaml
+    │   ├── staging
+    │   │   ├── kustomization.yaml
+    │   │   └── patch.yaml
+    │   └── prod
+    │       ├── kustomization.yaml
+    │       └── patch.yaml
+    └── clusters
+        ├── dev-cluster
+        │   ├── kustomization.yaml
+        │   └── some-resource.yaml
+        ├── staging-cluster
+        │   ├── kustomization.yaml
+        │   └── some-resource.yaml
+        └── prod-cluster
+            ├── kustomization.yaml
+            └── some-resource.yaml
