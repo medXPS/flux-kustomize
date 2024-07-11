@@ -76,8 +76,10 @@ pipeline {
                 }
             }
         }
-        stage('Push Update status to microsoft Teams ') {
-          //Push notifications to microsoft teams 
+          stage('Push Update status to Microsoft Teams') {
+            steps {
+                //Push notifications to Microsoft Teams
+            }
         }
     }
 }
