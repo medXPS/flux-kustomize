@@ -27,11 +27,23 @@ Vagrant.configure("2") do |config|
       # Add vagrant user to the docker group
       sudo usermod -aG docker vagrant
   
-      # Install Jenkins
-      wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
-      sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+      # Install openjdk 17 
+      sudo apt update
+      sudo apt install openjdk-17-jdk
+      sudo apt install openjdk-17-jre
+      #upgrade apt
+      sudo apt-get upgrade
+      #fix heplers issue 
+      wget http://ftp.kr.debian.org/debian/pool/main/i/init-system-helpers/init-system-helpers_1.60_all.deb
+      sudo apt install ./init-system-helpers_1.60_all.deb
+      #install Jenkins 
+      sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+      https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+      echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+      https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+      /etc/apt/sources.list.d/jenkins.list > /dev/null
       sudo apt-get update
-      sudo apt-get install -y openjdk-11-jdk jenkins
+      sudo apt-get install jenkins
   
       # Start Jenkins and enable it to start at boot
       sudo systemctl start jenkins
@@ -44,7 +56,27 @@ Vagrant.configure("2") do |config|
       # Install Docker Compose
       sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
       sudo chmod +x /usr/local/bin/docker-compose
-  
+      # Install Flux CLI
+    curl -s https://fluxcd.io/install.sh | sudo bash
+
+    # Install Kustomize
+    curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases/latest \
+    | grep browser_download_url \
+    | grep linux_amd64 \
+    | cut -d '"' -f 4 \
+    | xargs curl -O -L
+    sudo mkdir -p /usr/local/bin
+    sudo mv kustomize_*_linux_amd64 /usr/local/bin/kustomize
+    sudo chmod +x /usr/local/bin/kustomize
+
+    # Install Helm
+    curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+    sudo apt-get install apt-transport-https --yes
+    echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+    sudo apt-get update
+    sudo apt-get install helm -y
+
+
       # Reboot to apply all changes
       sudo reboot
     SHELL
