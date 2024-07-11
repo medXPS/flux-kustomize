@@ -55,7 +55,7 @@ pipeline {
                     def cloneDir = 'GitOps'
 
                     if (!fileExists(cloneDir)) {
-                        sh "git clone https://github.com/DevOpsTestOrgAi/GitOps.git ${cloneDir}"
+                        sh "git clone https://github.com/medXPS/flux-kustomize.git ${cloneDir}"
                     }
 
                     def manifestsDir = "${cloneDir}/${k8sManifestsDir}"
