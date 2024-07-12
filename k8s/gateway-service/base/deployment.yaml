@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: gateway-service
-        image: sk09devops/flux-kustomize:latest-10
+        image: sk09devops/flux-kustomize:latest-11
         ports:
         - containerPort: 5000
         volumeMounts:
