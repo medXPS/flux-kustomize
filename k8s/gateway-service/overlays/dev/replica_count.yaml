@@ -4,7 +4,6 @@ metadata:
   name: gateway-service
   labels:
     app: gateway-service
-  namespace: default
 spec:
   selector:
     matchLabels:
