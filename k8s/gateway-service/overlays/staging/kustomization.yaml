@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: staging
 bases:
   - ../../base
+namePrefix: staging-

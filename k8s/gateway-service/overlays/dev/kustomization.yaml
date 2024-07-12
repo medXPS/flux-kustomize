@@ -4,4 +4,5 @@ namespace: dev
 bases:
   - ../../base
 patches:
-  - replica_count.yaml
+  - path: replica_count.yaml
+namePrefix: dev-
