@@ -133,3 +133,7 @@ Service2
         └── prod-cluster
             ├── kustomization.yaml
             └── some-resource.yaml
+
+
+
+gitops create dashboard ww-gitops  --password=$PASSWORD  --export > ./gitops/weave-gitops-dashboard.yaml
