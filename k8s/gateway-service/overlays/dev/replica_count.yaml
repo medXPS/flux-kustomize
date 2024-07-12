@@ -9,4 +9,4 @@ spec:
   selector:
     matchLabels:
       app: gateway-service
-  replicas: 4
+  replicas: 3
