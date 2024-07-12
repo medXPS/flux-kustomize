@@ -3,4 +3,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello from ADRIA v1lates"
+    return "Adria Gateway Service DEV ENV "
