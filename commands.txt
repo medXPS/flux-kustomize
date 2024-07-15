@@ -141,3 +141,8 @@ gitops create dashboard ww-gitops  --password=$PASSWORD  --export > ./gitops/wea
 kubectl port-forward --address 0.0.0.0 service/gateway-service -n adria-poc 32089:9080
 kubectl port-forward --address 0.0.0.0 svc/ww-gitops-weave-gits -n flux-system 31461:9001
 9001:31461\TCP
+
+
+
+
+az ad sp create-for-rbac --name adriak8s --role reader --scopes /subscriptions/54dd0bf8-10dd-4596-bc77-a1061efa9d48/resourceGroups/adria
