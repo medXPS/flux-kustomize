@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gateway-service
-        image: sk09devops/flux-kustomize:latest-3
+        image: 20.61.52.27:8081/repository/docker-repository/flux-kustomize:latest-1
         ports:
         - containerPort: 5000
         volumeMounts:
@@ -31,3 +31,5 @@ spec:
       - name: config-volume
         configMap:
           name: gateway-service-cm
+      imagePullSecrets:
+      - name: nexus-registry  # Use the name of the secret created
