@@ -153,3 +153,7 @@ az ad sp create-for-rbac --name adriak8s --role reader --scopes /subscriptions/5
 flux create source helm ww-gitops 
   --url=https://helm.gitops.weave.works 
   --export > ./clusters/workshop/weave-gitops-source.yaml
+
+
+  -------------------------------------------
+  kubectl describe gitrepository dev-cluster-gateway-service-repo -n flux-system

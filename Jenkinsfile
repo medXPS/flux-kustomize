@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        registryName = 'sk09devops/flux-kustomize' // Provided Docker Hub repository name
-        registryCredential = 'DOCKERHUB' // Provided credential name
+        registryName = '20.61.52.27:8081/repository/docker-repository' // Nexus repository URL
+        registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         imageTag = "latest-${BUILD_NUMBER}" // Default tag with build number
         gitRepoURL = 'https://github.com/medXPS/flux-kustomize.git' // Code Repository
         gitRepoDir = 'gateway-service' // Provided directory name of your base code 
         dockerfilePath = 'microservices/gateway-service/src/Dockerfile' // Dockerfile path
-        k8sManifestsDir = 'k8s/gateway-service/base/deployment.yaml' // Kubernetes deployement file(contains image tag)
+        k8sManifestsDir = 'k8s/gateway-service/base/deployment.yaml' // Kubernetes deployement file (contains image tag)
     }
 
     stages {
@@ -31,7 +31,6 @@ pipeline {
             steps {
                 script {
                     dir(gitRepoDir) {
-                        
                         imageTag = "latest-${BUILD_NUMBER}"
                         dockerImage = docker.build(registryName, "-f ${dockerfilePath} . --tag ${imageTag}")
                     }
@@ -39,10 +38,10 @@ pipeline {
             }
         }
 
-        stage('Push Image to Docker Hub') {
+        stage('Push Image to Nexus Repository') {
             steps {
                 script {
-                    docker.withRegistry("https://registry.hub.docker.com", registryCredential) {
+                    docker.withRegistry("http://${registryName}", registryCredential) {
                         dockerImage.push("${imageTag}")
                     }
                 }
@@ -76,10 +75,5 @@ pipeline {
                 }
             }
         }
-        //   stage('Push Update status to Microsoft Teams') {
-        //     steps {
-        //         //Push notifications to Microsoft Teams
-        //     }
-        // }
     }
 }
