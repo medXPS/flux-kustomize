@@ -146,3 +146,10 @@ kubectl port-forward --address 0.0.0.0 svc/ww-gitops-weave-gits -n flux-system 3
 
 
 az ad sp create-for-rbac --name adriak8s --role reader --scopes /subscriptions/54dd0bf8-10dd-4596-bc77-a1061efa9d48/resourceGroups/adria
+
+----------------------
+
+
+flux create source helm ww-gitops 
+  --url=https://helm.gitops.weave.works 
+  --export > ./clusters/workshop/weave-gitops-source.yaml

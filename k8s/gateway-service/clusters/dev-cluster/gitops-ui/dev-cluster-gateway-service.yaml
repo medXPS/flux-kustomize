@@ -16,7 +16,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  path: ./k8s/gateway-service\clusters/dev-cluster/gitops-ui
+  path: ./k8s/gateway-service/clusters/dev-cluster/gitops-ui/deploy
   prune: true
   sourceRef:
     kind: GitRepository
