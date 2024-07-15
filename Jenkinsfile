@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         registryName = '20.61.52.27:8081/repository/docker-repository' // Nexus repository URL
-        registryCredential = 'nexus-registry' // Credential ID for Nexus (configured with username/password)
+        registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         imageTag = "latest-${BUILD_NUMBER}" // Default tag with build number
         gitRepoURL = 'https://github.com/medXPS/flux-kustomize.git' // Code Repository
