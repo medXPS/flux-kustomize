@@ -43,10 +43,9 @@ resource "azurerm_public_ip" "ci_cd_public_ip" {
   name                = "adria-public-ip"
   location            = data.azurerm_resource_group.rc-gp.location
   resource_group_name = data.azurerm_resource_group.rc-gp.name
-  
   allocation_method   = "Dynamic"
 
-  tags                = data.azurerm_resource_group.rc-gp.tags
+  tags = data.azurerm_resource_group.rc-gp.tags
 }
 
 # Define the virtual machine
