@@ -137,3 +137,7 @@ Service2
 
 
 gitops create dashboard ww-gitops  --password=$PASSWORD  --export > ./gitops/weave-gitops-dashboard.yaml
+
+kubectl port-forward --address 0.0.0.0 service/gateway-service -n adria-poc 32089:9080
+kubectl port-forward --address 0.0.0.0 svc/ww-gitops-weave-gits -n flux-system 31461:9001
+9001:31461\TCP

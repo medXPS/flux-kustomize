@@ -5,4 +5,5 @@ bases:
   - ../../base
 patches:
   - path: replica_count.yaml
+  - path: service_patch.yaml
 namePrefix: dev-
