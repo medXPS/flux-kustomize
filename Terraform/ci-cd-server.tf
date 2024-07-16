@@ -113,7 +113,7 @@ resource "azurerm_network_interface" "ci_cd_nic" {
   ip_configuration {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.default.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
   }
 }
 

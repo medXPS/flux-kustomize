@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gateway-service
-        image: 20.61.52.27:8081/repository/docker-repository/flux-kustomize:latest-1
+        image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest-1
         ports:
         - containerPort: 5000
         volumeMounts:

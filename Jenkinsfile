@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryName = '20.61.52.27:8081/repository/docker-repository' // Nexus repository URL
+        registryName = 'adria.westeurope.cloudapp.azure.com/repository/docker-repository' // Nexus repository URL
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         imageTag = "latest-${BUILD_NUMBER}" // Default tag with build number
@@ -61,7 +61,7 @@ pipeline {
 
                     def newImageLine = "image: ${registryName}:${imageTag}"
 
-                    sh "sed -i 's|image: sk09devops/flux-kustomize:latest.*|${newImageLine}|' ${manifestsDir}"
+                    sh "sed -i 's|image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest.*|${newImageLine}|' ${manifestsDir}"
 
                     withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         dir(cloneDir) {

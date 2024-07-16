@@ -214,5 +214,20 @@ az vm extension set
    --vm-name adria-vm 
    --name CustomScript 
    --publisher Microsoft.Azure.Extensions 
-   --settings "{\"fileUris\":[\"file://./cloud-init-web-server.txt\"]}" 
+   --settings "{\"fileUris\":[\"https://raw.githubusercontent.com/medXPS/flux-kustomize/main/Terraform/cloud-init-web-server.txt\"]}" 
    --protected-settings "{\"commandToExecute\": \"bash cloud-init-web-server.txt\"}"
+
+
+
+az vm extension set 
+    --resource-group adria 
+    --vm-name adria-vm 
+    --name CustomScript 
+    --publisher Microsoft.Azure.Extensions 
+    --settings '{"fileUris":["https://raw.githubusercontent.com/medXPS/flux-kustomize/main/Terraform/cloud-init-web-server.txt"]}' 
+    --protected-settings '{"commandToExecute": "cloud-init-web-server.txt"}'
+
+
+az network nsg rule create -g adria --nsg-name adria-nsg --name AllowPort8082 --priority 100 
+    --direction Inbound --protocol Tcp --source-address-prefix "*" --source-port-range "*" 
+    --destination-address-prefix "*" --destination-port-range 8082 --access Allow --description "Allow inbound traffic on port 8082"
