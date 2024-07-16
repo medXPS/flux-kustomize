@@ -157,3 +157,62 @@ flux create source helm ww-gitops
 
   -------------------------------------------
   kubectl describe gitrepository dev-cluster-gateway-service-repo -n flux-system
+
+az keyvault create --resource-group adria --name adria-vault --location westeurope --enabled-for-deployment
+az keyvault certificate create  --vault-name adria  --name nexus-cert  --policy "$(az keyvault certificate get-default-policy)"
+az keyvault certificate create --vault-name adria -n cert1   -p "$(az keyvault certificate get-default-policy)"
+
+
+
+secret=$(az keyvault secret list-versions 
+          --vault-name adria
+          --name cert1 
+          --query "[?attributes.enabled].id" --output tsv)
+vm_secret=$(az vm secret format --secrets "$secret" -g adria --keyvault adria)
+
+mamma@DevOps MINGW64 ~/Desktop/azure-adria $ echo $secret https://adria.vault.azure.net/secrets/cert1/0ce93b5399f14991b18477c669c45b45 mamma@DevOps MINGW64 ~/Desktop/azure-adria $
+
+
+
+$ vm_secret=$(az vm secret format --secrets "$secret" -g adria --keyvault adria)
+
+mamma@DevOps MINGW64 ~/Desktop/azure-adria
+$ echo $vm_secret
+ ]certificateUrl": "https://adria.vault.azure.net/secrets/cert1/0ce93b5399f14991b18477c669c45b45"oft.KeyVault/vaults/adria"
+
+mamma@DevOps MINGW64 ~/Desktop/azure-adria
+$
+
+
+
+az vm extension set 
+    --resource-group adria 
+    --vm-name adria-vm 
+    --name CustomScript 
+    --publisher Microsoft.Azure.Extensions 
+    --settings '{"fileUris":["file://./cloud-init-web-server.txt"]}' 
+    --protected-settings '{"commandToExecute": "bash cloud-init-web-server.txt"}'
+
+
+
+az vm extension set 
+   --resource-group adria 
+   --vm-name adria-vm 
+   --name CustomScript 
+   --publisher Microsoft.Azure.Extensions 
+   --settings '{"fileUris":["file://./cloud-init-web-server.txt"]}' 
+   --protected-settings '{"commandToExecute": "bash cloud-init-web-server.txt"}'
+
+
+
+
+   az keyvault certificate create --vault-name adria -n cert1 -p '{ \"issuerParameters\": { \"certificateTransparency\": null, \"name\": \"Self\" }, \"keyProperties\": { \"curve\": null, \"exportable\": true, \"keySize\": 2048, \"keyType\": \"RSA\", \"reuseKey\": true }, \"lifetimeActions\": [ { \"action\": { \"actionType\": \"AutoRenew\" }, \"trigger\": { \"daysBeforeExpiry\": 90 } } ], \"secretProperties\": { \"contentType\": \"application/x-pkcs12\" }, \"x509CertificateProperties\": { \"keyUsage\": [ \"cRLSign\", \"dataEncipherment\", \"digitalSignature\", \"keyEncipherment\", \"keyAgreement\", \"keyCertSign\" ], \"subject\": \"CN=CLIGetDefaultPolicy\", \"validityInMonths\": 12 } }'
+(Forbidden) Caller is not authorized to perform action on resource.
+
+az vm extension set 
+   --resource-group adria 
+   --vm-name adria-vm 
+   --name CustomScript 
+   --publisher Microsoft.Azure.Extensions 
+   --settings "{\"fileUris\":[\"file://./cloud-init-web-server.txt\"]}" 
+   --protected-settings "{\"commandToExecute\": \"bash cloud-init-web-server.txt\"}"

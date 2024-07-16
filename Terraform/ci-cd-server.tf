@@ -52,9 +52,11 @@ resource "azurerm_public_ip" "ci_cd_public_ip" {
 resource "azurerm_virtual_machine" "ci_cd_vm" {
   name                  = "adria-vm"
   location              = data.azurerm_resource_group.rc-gp.location
+  
   resource_group_name   = data.azurerm_resource_group.rc-gp.name
   network_interface_ids = [azurerm_network_interface.ci_cd_nic.id]
   vm_size               = "Standard_D2_v2"
+  
 
   storage_image_reference {
     publisher = "Canonical"
@@ -74,7 +76,7 @@ resource "azurerm_virtual_machine" "ci_cd_vm" {
     computer_name  = "adria-vm"
     admin_username = "adria"
   }
-
+  
   os_profile_linux_config {
     disable_password_authentication = true
 
@@ -101,7 +103,19 @@ resource "azurerm_network_security_rule" "allow_8081" {
   resource_group_name         = data.azurerm_resource_group.rc-gp.name
   network_security_group_name = azurerm_network_security_group.ci_cd_nsg.name
 }
-
+resource "azurerm_network_security_rule" "allow_5000" {
+  name                        = "Allow_TCP_5000"
+  priority                    = 1004
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = 5000
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = data.azurerm_resource_group.rc-gp.name
+  network_security_group_name = azurerm_network_security_group.ci_cd_nsg.name
+}
 resource "azurerm_network_security_rule" "allow_8080" {
   name                        = "Allow_TCP_8080"
   priority                    = 1002
