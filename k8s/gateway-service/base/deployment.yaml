@@ -33,5 +33,4 @@ spec:
       - name: config-volume
         configMap:
           name: gateway-service-cm
-      imagePullSecrets:
-      - name: nexus-registry  # Use the name of the secret created
+      
