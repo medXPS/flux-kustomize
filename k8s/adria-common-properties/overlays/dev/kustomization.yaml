@@ -3,4 +3,3 @@ kind: Kustomization
 namespace: adria-dev
 bases:
   - ../../base
-namePrefix: adria-dev-
