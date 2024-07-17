@@ -1,0 +1,7 @@
+resources:
+  - adria-nexus-secret.yaml
+  - cluster-role-binding.yaml
+  - cluster-role.yaml
+  - serviceaccount.yaml
+
+  

@@ -21,3 +21,4 @@ spec:
   sourceRef:
     kind: GitRepository
     name: dev-cluster-gateway-service-repo
+k8s\prerequisites\overlays\dev
