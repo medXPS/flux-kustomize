@@ -23,7 +23,7 @@ spec:
         - name: nexus-secret
       containers:
       - name: gateway-service
-        image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest-14
+        image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest-18
         ports:
         - containerPort: 5000
         volumeMounts:
