@@ -17,6 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: gateway-service
+        app.kubernetes.io/instance: release-name
     spec:
       imagePullSecrets:
         - name: adria-nexus-secret
