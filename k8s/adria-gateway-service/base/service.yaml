@@ -1,0 +1,20 @@
+---
+# Source: gateway-service/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-gateway-service
+  labels:
+    app.kubernetes.io/name: gateway-service
+  
+spec:
+  type: NodePort
+  ports:
+    - port: 9080
+      nodePort: 32089
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: gateway-service
+    app.kubernetes.io/instance: release-name

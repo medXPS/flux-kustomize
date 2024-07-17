@@ -1,0 +1,13 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: spring-cloud-kubernetes
+  namespace: adria
+subjects:
+  - kind: ServiceAccount
+    name: spring-cloud-kubernetes
+    namespace: adria
+roleRef:
+  kind: ClusterRole
+  name: spring-cloud-kubernetes
+  apiGroup: ""

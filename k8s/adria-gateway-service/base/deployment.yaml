@@ -1,0 +1,56 @@
+---
+# Source: gateway-service/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-gateway-service
+  labels:
+    app.kubernetes.io/name: gateway-service
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gateway-service
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gateway-service
+    spec:
+      imagePullSecrets:
+        - name: adria-nexus-secret
+      serviceAccountName: spring-cloud-kubernetes
+      securityContext:
+        {}
+      containers:
+        - name: gateway-service
+          securityContext:
+            {}
+          image: "nexus.adria-bt.digital:5001/abt/gateway-service:3.5.0"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9080
+              protocol: TCP
+          env:
+            - name: SPRING_CLOUD_BOOTSTRAP_ENABLED
+              value: "false"
+            - name: SPRING_CLOUD_KUBERNETES_SECRETS_ENABLEAPI
+              value: "true"
+            - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+              value: "file:/kubernetes/config/"
+          livenessProbe:
+            null
+          readinessProbe:
+            null
+          resources:
+            {}
+          volumeMounts:
+            - mountPath: /kubernetes/config/application.properties
+              name: adria-common-properties
+              subPath: application.properties
+      volumes:
+        - configMap:
+            name: adria-common-properties
+          name: adria-common-properties

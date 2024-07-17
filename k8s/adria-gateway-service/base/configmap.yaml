@@ -1,0 +1,139 @@
+---
+# Source: gateway-service/templates/configmap.yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: gateway-service
+data:
+  gateway-service.properties: |-
+    spring.cloud.gateway.default-filters[0]=DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+    spring.cloud.gateway.globalcors.corsConfigurations.[/**].allowedOriginPatterns=*
+    spring.cloud.gateway.globalcors.corsConfigurations.[/**].allowed-headers=*
+    spring.cloud.gateway.globalcors.corsConfigurations.[/**].allow-credentials=true
+    spring.cloud.gateway.globalcors.corsConfigurations.[/**].allowedMethods[0]=GET
+    spring.cloud.gateway.globalcors.corsConfigurations.[/**].allowedMethods[1]=POST
+    spring.cloud.gateway.globalcors.corsConfigurations.[/**].allowedMethods[2]=OPTIONS
+
+    ############################################ Micro Service Administration ############################################
+    spring.cloud.gateway.routes[0].id=administration-service
+    spring.cloud.gateway.routes[0].uri=lb://administration-service
+    spring.cloud.gateway.routes[0].predicates[0]=Path=/app/administration/**
+    spring.cloud.gateway.routes[0].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[0].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[0].filters[0].args.fallbackUri=forward:/fallback/administration
+    spring.cloud.gateway.routes[0].filters[1]=RewritePath=/app/administration/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service compte ############################################
+    spring.cloud.gateway.routes[1].id=compte-service
+    spring.cloud.gateway.routes[1].uri=lb://compte-service
+    spring.cloud.gateway.routes[1].predicates[0]=Path=/app/compte/**
+    spring.cloud.gateway.routes[1].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[1].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[1].filters[0].args.fallbackUri=forward:/fallback/compte
+    spring.cloud.gateway.routes[1].filters[1]=RewritePath=/app/compte/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service tache ############################################
+    spring.cloud.gateway.routes[2].id=tache-service
+    spring.cloud.gateway.routes[2].uri=lb://tache-service
+    spring.cloud.gateway.routes[2].predicates[0]=Path=/app/tache/**
+    spring.cloud.gateway.routes[2].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[2].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[2].filters[0].args.fallbackUri=forward:/fallback/tache
+    spring.cloud.gateway.routes[2].filters[1]=RewritePath=/app/tache/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service transaction ############################################
+    spring.cloud.gateway.routes[3].id=transaction-service
+    spring.cloud.gateway.routes[3].uri=lb://transaction-service
+    spring.cloud.gateway.routes[3].predicates[0]=Path=/app/transaction/**
+    spring.cloud.gateway.routes[3].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[3].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[3].filters[0].args.fallbackUri=forward:/fallback/transaction
+    spring.cloud.gateway.routes[3].filters[1]=RewritePath=/app/transaction/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service contrat ############################################
+    spring.cloud.gateway.routes[4].id=contrat-service
+    spring.cloud.gateway.routes[4].uri=lb://contrat-service
+    spring.cloud.gateway.routes[4].predicates[0]=Path=/app/contrats/**
+    spring.cloud.gateway.routes[4].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[4].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[4].filters[0].args.fallbackUri=forward:/fallback/contrat
+    spring.cloud.gateway.routes[4].filters[1]=RewritePath=/app/contrats/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service remise d'ordre ############################################
+    spring.cloud.gateway.routes[5].id=remise-ordre-service
+    spring.cloud.gateway.routes[5].uri=lb://remise-ordre-service
+    spring.cloud.gateway.routes[5].predicates[0]=Path=/app/ro/**
+    spring.cloud.gateway.routes[5].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[5].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[5].filters[0].args.fallbackUri=forward:/fallback/ro
+    spring.cloud.gateway.routes[5].filters[1]=RewritePath=/app/ro/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service trade ############################################
+    spring.cloud.gateway.routes[6].id=trade-service
+    spring.cloud.gateway.routes[6].uri=lb://trade-service
+    spring.cloud.gateway.routes[6].predicates[0]=Path=/app/trade/**
+    spring.cloud.gateway.routes[6].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[6].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[6].filters[0].args.fallbackUri=forward:/fallback/trade
+    spring.cloud.gateway.routes[6].filters[1]=RewritePath=/app/trade/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service digital marketing ############################################
+    spring.cloud.gateway.routes[7].id=digital-marketing-service
+    spring.cloud.gateway.routes[7].uri=lb://digital-marketing-service
+    spring.cloud.gateway.routes[7].predicates[0]=Path=/app/digital-marketing/**
+    spring.cloud.gateway.routes[7].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[7].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[7].filters[0].args.fallbackUri=forward:/fallback/digital-marketing
+    spring.cloud.gateway.routes[7].filters[1]=RewritePath=/app/digital-marketing/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service moyen paiement ############################################
+    spring.cloud.gateway.routes[8].id=moyen-paiement-service
+    spring.cloud.gateway.routes[8].uri=lb://moyen-paiement-service
+    spring.cloud.gateway.routes[8].predicates[0]=Path=/app/moyen-paiement/**
+    spring.cloud.gateway.routes[8].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[8].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[8].filters[0].args.fallbackUri=forward:/fallback/moyen-paiement
+    spring.cloud.gateway.routes[8].filters[1]=RewritePath=/app/moyen-paiement/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service reporting ############################################
+    spring.cloud.gateway.routes[9].id=reporting-service
+    spring.cloud.gateway.routes[9].uri=lb://reporting-service
+    spring.cloud.gateway.routes[9].predicates[0]=Path=/app/reportings/**
+    spring.cloud.gateway.routes[9].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[9].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[9].filters[0].args.fallbackUri=forward:/fallback/reportings
+    spring.cloud.gateway.routes[9].filters[1]=RewritePath=/app/reportings/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service middle ############################################
+    spring.cloud.gateway.routes[10].id=middle-service
+    spring.cloud.gateway.routes[10].uri=lb://middle-service
+    spring.cloud.gateway.routes[10].predicates[0]=Path=/app/middle/**
+    spring.cloud.gateway.routes[10].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[10].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[10].filters[0].args.fallbackUri=forward:/fallback/middle
+    spring.cloud.gateway.routes[10].filters[1]=RewritePath=/app/middle/(?<remains>.*), /${remains}
+
+
+    ############################################ Micro Service Paiement Facture ############################################
+    spring.cloud.gateway.routes[12].id=paiement-facture-service
+    spring.cloud.gateway.routes[12].uri=lb://paiement-facture-service
+    spring.cloud.gateway.routes[12].predicates[0]=Path=/app/paiement-facture/**
+    spring.cloud.gateway.routes[12].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[12].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[12].filters[0].args.fallbackUri=forward:/fallback/paiement-facture
+    spring.cloud.gateway.routes[12].filters[1]=RewritePath=/app/paiement-facture/(?<remains>.*), /${remains}
+
+    ############################################ Micro Service middle paiement facture ############################################
+    spring.cloud.gateway.routes[13].id=middle-paiement-facture
+    spring.cloud.gateway.routes[13].uri=lb://middle-paiement-facture
+    spring.cloud.gateway.routes[13].predicates[0]=Path=/app/middle-paiement-facture/**
+    spring.cloud.gateway.routes[13].filters[0].name=CircuitBreaker
+    spring.cloud.gateway.routes[13].filters[0].args.name=fallbackcmd
+    spring.cloud.gateway.routes[13].filters[0].args.fallbackUri=forward:/fallback/middle-paiement-facture
+    spring.cloud.gateway.routes[13].filters[1]=RewritePath=/app/middle-paiement-facture/(?<remains>.*), /${remains}
+
+
+    ############################################ Auth Keycloak ############################################
+    spring.cloud.gateway.routes[11].id=auth-service
+    spring.cloud.gateway.routes[11].uri=http://authentification-service:8080/auth/realms/standard-adria/protocol/openid-connect/token
+    spring.cloud.gateway.routes[11].predicates[0]=Path=/auth/**

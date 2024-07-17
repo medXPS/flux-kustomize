@@ -231,3 +231,16 @@ az vm extension set
 az network nsg rule create -g adria --nsg-name adria-nsg --name AllowPort8082 --priority 100 
     --direction Inbound --protocol Tcp --source-address-prefix "*" --source-port-range "*" 
     --destination-address-prefix "*" --destination-port-range 8082 --access Allow --description "Allow inbound traffic on port 8082"
+
+
+
+
+helm template 
+--output-dir base 
+--namespace adria-dev 
+--values values.yaml 
+gateway-service 
+charts/adria-charts
+
+
+helm registry login https://adria.westeurope.cloudapp.azure.com/   -u admin -p 
