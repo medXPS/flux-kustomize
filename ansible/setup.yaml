@@ -1,7 +1,15 @@
 #emtpy  because Our target is k8s  
 #flux-bootstrap
-- name: Bootstraping flux over aks cluster
+- name: Flux  deployement
   hosts: localhost
+  conenction: local 
+  become: yes
+  roles:
+  - role: 'flux'
+
+- name: Bootstraping flux over aks cluster
+  hosts: local
+  connection: local
   become: yes
   roles:
   - role: 'flux-bootstrap'

@@ -244,3 +244,6 @@ charts/adria-charts
 
 
 helm registry login https://adria.westeurope.cloudapp.azure.com/   -u admin -p 
+
+
+kubectl create secret docker-registry nexus-secret --docker-server=adria.westeurope.cloudapp.azure.com --docker-username=admin --docker-password=adria -n dev

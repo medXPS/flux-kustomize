@@ -19,6 +19,8 @@ spec:
       labels:
         app: gateway-service
     spec:
+      imagePullSecrets:
+        - name: nexus-secret
       containers:
       - name: gateway-service
         image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest-14
