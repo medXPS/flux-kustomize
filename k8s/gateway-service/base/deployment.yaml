@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gateway-service
-        image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest-1
+        image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest-14
         ports:
         - containerPort: 5000
         volumeMounts:
