@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryName = 'adria.westeurope.cloudapp.azure.com:5001' // Nexus repository URL
+        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/docker-repository' // Nexus repository URL with port 5001
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         imageTag = "3.5.0.${BUILD_NUMBER}" // Default tag with build number
@@ -40,7 +40,7 @@ pipeline {
         stage('Push Image to Nexus Repository') {
             steps {
                 script {
-                    docker.withRegistry("http://${registryName}", registryCredential) {
+                    docker.withRegistry("https://${registryName}", registryCredential) {
                         dockerImage.push("3.5.0.${BUILD_NUMBER}")
                     }
                 }
