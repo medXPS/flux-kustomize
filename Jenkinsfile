@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryName = 'adria.westeurope.cloudapp.azure.com/repository/docker-repository' // Nexus repository URL
+        registryName = 'adria.westeurope.cloudapp.azure.com:5001' // Nexus repository URL
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         imageTag = "3.5.0.${BUILD_NUMBER}" // Default tag with build number
