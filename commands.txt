@@ -232,14 +232,16 @@ az network nsg rule create -g adria --nsg-name adria-nsg --name AllowPort8082 --
     --direction Inbound --protocol Tcp --source-address-prefix "*" --source-port-range "*" 
     --destination-address-prefix "*" --destination-port-range 8082 --access Allow --description "Allow inbound traffic on port 8082"
 
+   
 
+helm fetch  --untar  --untardir charts  adria-charts/${chart_name}
 
 
 helm template 
 --output-dir base 
 --namespace adria-dev 
 --values values.yaml 
-gateway-service 
+transaction-service 
 charts/adria-charts
 
 
@@ -247,3 +249,88 @@ helm registry login https://adria.westeurope.cloudapp.azure.com/   -u admin -p
 
 
 kubectl create secret docker-registry nexus-secret --docker-server=adria.westeurope.cloudapp.azure.com --docker-username=admin --docker-password=adria -n dev
+
+
+
+bitbucket token : 
+
+ATBB8xteB4c9xxNdrXQ9gLtMuZ5z484125C8
+
+
+export BITBUCKET_TOKEN=ATBB8xteB4c9xxNdrXQ9gLtMuZ5z484125C8
+
+flux bootstrap bitbucket-server \
+  --token-auth \
+  --hostname=bitbucket.org \
+  --owner=m-ammaha \
+  --repository=gitops-adria/flux \
+  --branch=main \
+  --path=./adria-cluster \
+  --personal
+
+
+  ansible-playbook -i localhost, flux/${BITBUCKET_PATH}/ansible/setup.yaml
+
+  flux bootstrap git --url=https://m-ammaha@bitbucket.org/gitops-adria/flux.git --username=m-ammaha  --token-auth --branch=main --path=./adria-cluster
+
+  flux bootstrap git \
+  --url=https://m-ammaha@bitbucket.org/gitops-adria/flux.git \
+  --username=m-ammaha \
+  --password=$BITBUCKET_TOKEN \
+  --token-auth \
+   --branch=main \
+  --path=./adria-cluster \
+
+
+  flux bootstrap bitbucket-server 
+  --owner=adria-gitops
+  --username=m-ammaha
+  --repository=flux
+  --hostnamebitbucket.org=
+  --token-auth
+  --path=adria-cluster
+
+  flux bootstrap bitbucket-server 
+  --owner=gitops-adria 
+  --username=m-ammaha
+  --repository=flux
+  --branch=main 
+  --hostname=bitbucket.org 
+  --token-auth 
+  --path=adria-cluster
+
+
+#export aks kubeconfig 
+  az aks get-credentials --resource-group adria --name adria-aks --file kubeconfig.yaml
+
+
+
+
+
+
+
+
+  ----------------- TASKS
+  - deploy Git repo  
+    path : adria-cluster\ansible\kubernetes\files\flux\gitRepository\gitRepository.yaml
+    use kubectl  
+  - deploy Flux UI  
+    path : adria-cluster\ansible\kubernetes\files\flux\gitops-ui\gitops-ui-deployement.yaml
+    use kubectl  
+  - deploy prerequisites
+    path : adria-cluster\ansible\kubernetes\files\flux\infra\dev\prerequisites\prerequisites.yaml
+    use kubectl 
+  - deploy adria common properties
+    path : adria-cluster\ansible\kubernetes\files\flux\infra\dev\adria-common-properties\adria-common-properties.yaml
+    use kubectl 
+  - deploy adria gateway service
+    path : adria-cluster\ansible\kubernetes\files\flux\infra\dev\adria-gateway-service\adria-gateway-service.yaml
+    use kubectl 
+   
+as you see there is dev   it's a variable 
+use lookup to get variable from jenkins 
+
+
+./infra/kustomize\prerequisites/overlays/dev
+./infra/kustomize/adria-common-properties/overlays/dev
+./infra/kustomize/adria-gateway-service/overlays/dev

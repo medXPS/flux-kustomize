@@ -5,7 +5,7 @@ pipeline {
         registryName = 'adria.westeurope.cloudapp.azure.com/repository/docker-repository' // Nexus repository URL
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
-        imageTag = "latest-${BUILD_NUMBER}" // Default tag with build number
+        imageTag = "3.5.0.${BUILD_NUMBER}" // Default tag with build number
         gitRepoURL = 'https://github.com/medXPS/flux-kustomize.git' // Code Repository
         gitRepoDir = 'gateway-service' // Provided directory name of your base code 
         dockerfilePath = 'microservices/gateway-service/src/Dockerfile' // Dockerfile path
@@ -31,8 +31,7 @@ pipeline {
             steps {
                 script {
                     dir(gitRepoDir) {
-                        imageTag = "latest-${BUILD_NUMBER}"
-                        dockerImage = docker.build(registryName, "-f ${dockerfilePath} . --tag ${imageTag}")
+                        dockerImage = docker.build("${registryName}:3.5.0.${BUILD_NUMBER}", "-f ${dockerfilePath} .")
                     }
                 }
             }
@@ -42,7 +41,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("http://${registryName}", registryCredential) {
-                        dockerImage.push("${imageTag}")
+                        dockerImage.push("3.5.0.${BUILD_NUMBER}")
                     }
                 }
             }
@@ -54,19 +53,18 @@ pipeline {
                     def cloneDir = 'GitOps'
 
                     if (!fileExists(cloneDir)) {
-                        sh "git clone https://github.com/medXPS/flux-kustomize.git ${cloneDir}"
+                        sh "git clone ${gitRepoURL} ${cloneDir}"
                     }
 
                     def manifestsDir = "${cloneDir}/${k8sManifestsDir}"
+                    def newImageLine = "image: ${registryName}:3.5.0.${BUILD_NUMBER}"
 
-                    def newImageLine = "image: ${registryName}:${imageTag}"
-
-                    sh "sed -i 's|image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:latest.*|${newImageLine}|' ${manifestsDir}"
+                    sh "sed -i 's|image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:.*|${newImageLine}|' ${manifestsDir}"
 
                     withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         dir(cloneDir) {
-                            sh "git config user.email mohamedammaha2020@gmail.com" 
-                            sh "git config user.name medXPS" 
+                            sh "git config user.email 'mohamedammaha2020@gmail.com'" 
+                            sh "git config user.name 'medXPS'" 
                             sh "git add ."
                             sh "git commit -m 'Update image tag in Kubernetes manifests'"
                             sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/medXPS/flux-kustomize.git HEAD:main"

@@ -1,0 +1,22 @@
+---
+- name: Check if Flux is installed
+  command: flux --version
+  register: flux_installed
+  ignore_errors: true
+
+- name: Install Flux if not installed
+  shell: curl -s https://fluxcd.io/install.sh | sudo bash
+  when: flux_installed.rc != 0
+
+- name: Bootstrap Flux with Bitbucket repository
+  shell: >
+    flux bootstrap bitbucket-server
+    --token-auth
+    --hostname=bitbucket.org
+    --owner={{ bitbucket_owner }}
+    --repository={{ bitbucket_repo }}
+    --branch={{ bitbucket_branch }}
+    --path={{ bitbucket_path }}
+    --personal
+  environment:
+    GIT_TOKEN: "{{ bitbucket_token }}"

@@ -1,15 +1,14 @@
 #emtpy  because Our target is k8s  
 #flux-bootstrap
-- name: Flux  deployement
+---
+- name: Install and bootstrap Flux
   hosts: localhost
-  conenction: local 
-  become: yes
   roles:
-  - role: 'flux'
-
-- name: Bootstraping flux over aks cluster
-  hosts: local
-  connection: local
-  become: yes
-  roles:
-  - role: 'flux-bootstrap'
+    - role: kubernetes
+      tasks_from: flux.yml
+      vars:
+        bitbucket_owner: "{{ lookup('env', 'BITBUCKET_OWNER') }}"
+        bitbucket_repo: "{{ lookup('env', 'BITBUCKET_REPO') }}"
+        bitbucket_branch: "{{ lookup('env', 'BITBUCKET_BRANCH') }}"
+        bitbucket_path: "{{ lookup('env', 'BITBUCKET_PATH') }}"
+        bitbucket_token: "{{ lookup('env', 'BITBUCKET_TOKEN') }}"
