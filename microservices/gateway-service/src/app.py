@@ -3,4 +3,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "sync test ON AKS With fluxCD & Kustomize v2"
+    return "image update automation :"
