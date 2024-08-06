@@ -3,4 +3,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return " Hello from adria : using image update automation : v 3.5.0-88"
+    return " Hello from Adria : this is Tag 3.5.0-35"
