@@ -3,4 +3,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "image update automation yyy:"
+    return "ChimChim v1"
