@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryBaseURL = 'adria.westeurope.cloudapp.azure.com:5001' // Base Nexus URL with port 5001
-        customer = 'abt' // Set this to the specific customer (e.g., abt, cih, bcp, cmd)
-        service = 'contrat-service' // Set this to the specific service (e.g., contrat-service, admin-front)
+        registryName = 'adria.westeurope.cloudapp.azure.com:5001/adria-docker-repository' // Corrected Nexus repository URL with port 5001
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         imageTag = "3.5.0-${BUILD_NUMBER}" // Default tag with build number
@@ -33,8 +31,7 @@ pipeline {
             steps {
                 script {
                     dir(gitRepoDir) {
-                        // Build Docker image with correct repository structure
-                        dockerImage = docker.build("${registryBaseURL}/${customer}/${service}:${imageTag}", "-f ${dockerfilePath} .")
+                        dockerImage = docker.build("${registryName}:${imageTag}", "-f ${dockerfilePath} .")
                     }
                 }
             }
@@ -43,8 +40,8 @@ pipeline {
         stage('Push Image to Nexus Repository') {
             steps {
                 script {
-                    docker.withRegistry("https://${registryBaseURL}", registryCredential) {
-                        dockerImage.push("${imageTag}")
+                    docker.withRegistry("https://${registryName}", registryCredential) {
+                        dockerImage.push(imageTag)
                     }
                 }
             }
@@ -60,9 +57,9 @@ pipeline {
                     }
 
                     def manifestsDir = "${cloneDir}/${k8sManifestsDir}"
-                    def newImageLine = "image: ${registryBaseURL}/${customer}/${service}:${imageTag}"
+                    def newImageLine = "image: ${registryName}:${imageTag}"
 
-                    sh "sed -i 's|image: .*/.*/.*:.*|${newImageLine}|' ${manifestsDir}"
+                    sh "sed -i 's|image: .*/gateway-service:.*|${newImageLine}|' ${manifestsDir}"
 
                     withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         dir(cloneDir) {
