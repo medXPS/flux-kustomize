@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/abt' // Remove trailing slash
+        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/abt' // Correct URL without trailing slash
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         image_name = 'flask-app'
@@ -60,7 +60,7 @@ pipeline {
                     def manifestsDir = "${cloneDir}/${k8sManifestsDir}"
                     def newImageLine = "image: ${registryName}/${image_name}:${imageTag}"
 
-                    sh "sed -i 's|image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:.*|${newImageLine}|' ${manifestsDir}"
+                    sh "sed -i 's|image: adria.westeurope.cloudapp.azure.com/repository/abt/${image_name}:.*|${newImageLine}|' ${manifestsDir}"
 
                     withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         dir(cloneDir) {
