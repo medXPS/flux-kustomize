@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/abt/' // Nexus repository URL with port 5001
+        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/abt' // Remove trailing slash
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
-        image_name='flask-app'
+        image_name = 'flask-app'
         imageTag = "3.5.0-${BUILD_NUMBER}" // Default tag with build number
         gitRepoURL = 'https://github.com/medXPS/flux-kustomize.git' // Code Repository
         gitRepoDir = 'gateway-service' // Provided directory name of your base code 
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     dir(gitRepoDir) {
-                        dockerImage = docker.build("${registryName}/${image_name}:3.5.0-${BUILD_NUMBER}", "-f ${dockerfilePath} .")
+                        dockerImage = docker.build("${registryName}/${image_name}:${imageTag}", "-f ${dockerfilePath} .")
                     }
                 }
             }
@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("https://${registryName}", registryCredential) {
-                        dockerImage.push("3.5.0-${BUILD_NUMBER}")
+                        dockerImage.push("${imageTag}")
                     }
                 }
             }
@@ -58,7 +58,7 @@ pipeline {
                     }
 
                     def manifestsDir = "${cloneDir}/${k8sManifestsDir}"
-                    def newImageLine = "image: ${registryName}:3.5.0-${BUILD_NUMBER}"
+                    def newImageLine = "image: ${registryName}/${image_name}:${imageTag}"
 
                     sh "sed -i 's|image: adria.westeurope.cloudapp.azure.com/repository/docker-repository:.*|${newImageLine}|' ${manifestsDir}"
 
