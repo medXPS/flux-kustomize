@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/abt' // Nexus repository URL with port 5001
+        registryName = 'adria.westeurope.cloudapp.azure.com:5001/repository/abt/' // Nexus repository URL with port 5001
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
         dockerImage = ''
         image_name='flask-app'
