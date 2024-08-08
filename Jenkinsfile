@@ -2,16 +2,15 @@ pipeline {
     agent any
 
     environment {
-        registryBaseURL = 'adria.westeurope.cloudapp.azure.com:5001/adria-docker-repository' // Base Nexus URL with port 5001
-        customer = 'abt' // Set this to the specific customer (e.g., abt, cih, bcp, cmd)
-        service = 'contrat-service' // Set this to the specific service (e.g., contrat-service, admin-front)
+        registryBaseURL = 'adria.westeurope.cloudapp.azure.com:5001'
         registryCredential = 'NEXUS' // Credential ID for Nexus (configured with username/password)
-        dockerImage = ''
+        customer = 'abt' // This could be dynamically set based on the pipeline or input parameters
+        imageName = 'contrat-service'
         imageTag = "3.5.0-${BUILD_NUMBER}" // Default tag with build number
+        fullImageName = "${registryBaseURL}/${customer}/${imageName}:${imageTag}"
         gitRepoURL = 'https://github.com/medXPS/flux-kustomize.git' // Code Repository
-        gitRepoDir = 'gateway-service' // Provided directory name of your base code 
+        gitRepoDir = 'gateway-service' // Directory of the code
         dockerfilePath = 'microservices/gateway-service/src/Dockerfile' // Dockerfile path
-        k8sManifestsDir = 'k8s/gateway-service/base/deployment.yaml' // Kubernetes deployment file (contains image tag)
     }
 
     stages {
@@ -33,8 +32,7 @@ pipeline {
             steps {
                 script {
                     dir(gitRepoDir) {
-                        // Build Docker image with correct repository structure
-                        dockerImage = docker.build("${registryBaseURL}/${customer}/${service}:${imageTag}", "-f ${dockerfilePath} .")
+                        docker.build("${fullImageName}", "-f ${dockerfilePath} .")
                     }
                 }
             }
@@ -44,7 +42,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("https://${registryBaseURL}", registryCredential) {
-                        dockerImage.push("${imageTag}")
+                        docker.image(fullImageName).push()
                     }
                 }
             }
@@ -60,9 +58,9 @@ pipeline {
                     }
 
                     def manifestsDir = "${cloneDir}/${k8sManifestsDir}"
-                    def newImageLine = "image: ${registryBaseURL}/${customer}/${service}:${imageTag}"
+                    def newImageLine = "image: ${fullImageName}"
 
-                    sh "sed -i 's|image: .*/.*/.*:.*|${newImageLine}|' ${manifestsDir}"
+                    sh "sed -i 's|image: .*/gateway-service:.*|${newImageLine}|' ${manifestsDir}"
 
                     withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         dir(cloneDir) {
